@@ -1,3 +1,100 @@
-<h1>
-  {{title}}
-</h1>
+<p-dialog header="Ad {{selectedAd.code}}" [(visible)]="display" width="550" height="590">
+  <p-galleria [images]="selectedAd.images" panelWidth="70%" panelHeight="230" frameHeight='40'
+              [showCaption]="false"></p-galleria>
+  <div id="params" style="overflow-y: scroll; height:200px;">
+    <p *ngFor="let key of selectedAdKeys">
+      {{key}}: {{selectedAd[key]}}
+    </p>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <button type="button" pButton icon="fa-close" (click)="display=false" label="Close"></button>
+      <a href="{{selectedAd.origin}}" target="_blank">
+        <button type="button" pButton icon="fa-check" label="Go to origin"></button>
+      </a>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<md-sidenav-container>
+  <md-sidenav #sidenav mode="side" opened='true' class="app-sidenav">
+    <h2>Filters</h2>
+
+    <div class="nav">
+      <md-select placeholder="Type" [(ngModel)]="selectedType" name="food" (change)="OnParamsChange()">
+        <md-option *ngFor="let type of types" [value]="type.value">
+          {{type.viewValue}}
+        </md-option>
+      </md-select>
+    </div>
+
+    <div class="nav">
+      <md-select placeholder="Deal" [(ngModel)]="selectedDeal" name="food" (change)="OnParamsChange()">
+        <md-option *ngFor="let deal of deals" [value]="deal.value">
+          {{deal.viewValue}}
+        </md-option>
+      </md-select>
+    </div>
+
+    <div class="nav">
+      <md-input-container class="example-margin">
+        <input mdInput type="number" placeholder="Min price" [(ngModel)]="minPrice" (change)="OnParamsChange()">
+      </md-input-container>
+      <br>
+      <md-input-container class="example-margin">
+        <input mdInput type="number" placeholder="Max price" [(ngModel)]="maxPrice" (change)="OnParamsChange()">
+      </md-input-container>
+    </div>
+
+    <div class="nav">
+      <md-input-container class="example-margin">
+        <input mdInput type="number" placeholder="Min area" [(ngModel)]="minArea" (change)="OnParamsChange()">
+      </md-input-container>
+      <br>
+      <md-input-container class="example-margin">
+        <input mdInput type="number" placeholder="Max area" [(ngModel)]="maxArea" (change)="OnParamsChange()">
+      </md-input-container>
+    </div>
+
+    <md-input-container class="example-margin">
+      <input mdInput type="string" placeholder="Search" [(ngModel)]="regex" (change)="OnParamsChange()">
+    </md-input-container>
+
+  </md-sidenav>
+
+  <md-toolbar color="primary">
+    <button class="app-icon-button" (click)="sidenav.toggle()">
+      <i class="material-icons app-toolbar-menu">menu</i>
+    </button>
+
+    <h1>
+      {{title}}
+    </h1>
+
+  </md-toolbar>
+  <md-grid-list cols="3" rowHeight="500px">
+
+    <md-grid-tile
+      *ngFor="let ad of ads">
+      <md-card class="example-card">
+        <md-card-header>
+          <div md-card-avatar class="example-header-image"></div>
+          <md-card-title><h3>{{ad.deal}} {{ad.type}}</h3></md-card-title>
+          <md-card-subtitle>{{ad.price}} Euro</md-card-subtitle>
+        </md-card-header>
+        <img md-card-image src={{ad.images[0].source}}>
+        <md-card-content>
+          <p>
+            {{ad.description.slice(0, 100)}}
+          </p>
+        </md-card-content>
+        <md-card-actions>
+          <button type="text" (click)="openDialog(ad)" pButton icon="fa-external-link-square" label="Show"></button>
+        </md-card-actions>
+      </md-card>
+
+    </md-grid-tile>
+
+  </md-grid-list>
+
+</md-sidenav-container>
